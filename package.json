@@ -1,0 +1,19 @@
+{
+  "name": "it122",
+  "version": "1.0.0",
+  "description": "it 122 classwork, summer 2021",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RANovelli/it122.git"
+  },
+  "author": "ryan a novelli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RANovelli/it122/issues"
+  },
+  "homepage": "https://github.com/RANovelli/it122#readme"
+}
