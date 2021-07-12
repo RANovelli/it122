@@ -10,14 +10,10 @@ const getAll = () => {
     return bands;
 }
 
-// console.log(getAll());
-
 const getItem = (name) => {
     return bands.find((band) => {
         return band.name === name;
     });
 } 
-
-// console.log(getItem("beatles"));
 
 export { getAll, getItem };

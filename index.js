@@ -2,8 +2,8 @@ import * as data from './data.js';
 import http from 'http';
 import { parse } from "querystring";
 http.createServer((req,res) => {
-    let url = req.url.split("?");  // separate route from query string
-    let query = parse(url[1]); // convert query string to a JS object 
+    let url = req.url.split("?"); 
+    let query = parse(url[1]);  
     var path = req.url.toLowerCase();
     
     switch(path) {
