@@ -1,0 +1,17 @@
+<html>
+    <body>
+        <a href="/">Home</a>
+{{#if result}}
+    <h2>{{name}} members</h2>
+    <li>sing: {{result.sing}}</li>
+    <li>lead guitar: {{result.guitar1}}</li>
+    <li>rhythm guitar: {{result.guitar2}}</li>
+    <li>bass: {{result.bass}}</li>
+    <li>drums: {{result.drums}}</li>
+    </p>
+{{else}}
+        <h2>{{name}} not found</h2>
+{{/if}}
+
+    </body>
+</html>

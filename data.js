@@ -1,3 +1,5 @@
+'use strict'
+
 let bands = [
     { name : "rolling stones", sing : "mick", guitar1 : "keef", guitar2 : "brian", bass : "bill", drums : "charlie" },
     { name : "beatles", guitar1 : "john", guitar2 : "george", bass : "paul", drums : "ringo" },
