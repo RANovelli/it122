@@ -6,7 +6,7 @@ http.createServer((req,res) => {
     let query = parse(url[1]);  
     var path = req.url.toLowerCase();
     
-    switch(path) {
+    switch(url[0]) {
         case '/':
             res.writeHead(200, {'Content-Type': 'text/plain'});
             res.end(JSON.stringify(data.getAll()))
@@ -15,7 +15,7 @@ http.createServer((req,res) => {
             res.writeHead(200, {'Content-Type': 'text/plain'});
             res.end('My name is Ryan Novelli, this is my first homework assignment for it 122');
             break;
-        case '/detail?name=rolling+stones':
+        case '/detail':
             res.writeHead(200, {'Content-Type': 'text/plain'});
             res.end(JSON.stringify(data.getItem(query.name)))
             break;
