@@ -1,0 +1,98 @@
+<html>
+<head>
+    <title>React App Demo</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    
+</head>
+
+<body>
+
+<div id="root"></div>
+<script type="text/babel">
+    // define your sub components here
+
+    const ItemList = (props) => {
+      const bullets =  props.items.map((item)=> {
+        return <li onClick={props.handleClick} key={item._id}>{item.name}</li>
+      });
+      return <ul>{bullets}</ul>
+    }
+
+    const ItemDetail = (props) => {
+      return <div>
+              <h3>Details for:</h3>
+              <form>
+                Quote: <input onChange={props.handleEdit} type="text" name="quote" value={props.item.name || ""}  /><br />
+                Author: <input onChange={props.handleEdit} type="text" name="author" value={props.item.sing || ""}  /><br />
+                Date: <input onChange={props.handleEdit} type="text" name="date" value={props.item.guitar1 || ""}  /> <br />
+                <p>ID: {props.item._id}</p>
+              </form>
+              
+            </div>
+    }
+
+    class App extends React.Component{
+      constructor(props){
+          super(props);
+          // Set initial state using data from server application
+          this.state = {
+            items: {{{ bands }}},
+            currentItem: { } // current selected item
+          };
+
+          // bind application state to click handler
+          this.selectItem = this.selectItem.bind(this);
+         
+      }
+      // some coments here
+      handleUpdate() {
+        fetch(`/api/quote/${this.state.currentItem._id}`, {
+          method: "POST",
+        	headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: this.state.currentItem.name,
+            sing: this.state.currentItem.sing,
+            guitar1: this.state.currentItem.guitar1,
+          })
+        })
+        .then((response) => {
+            return response.json();
+        })
+        .then((result) => {
+          console.log(JSON.stringify(result));
+          this.setState(result) 
+        })
+        .catch(err => console.log(err));
+      }
+
+
+      // handle list item clicked
+      selectItem(event) {
+        // event.target is the HTML item clicked
+        console.log(event.target.innerText);
+        const found = this.state.items.find((item)=> {
+          return item.quote === event.target.innerText;
+        });
+        console.log(found);
+        this.setState({currentItem: found});
+      }
+
+      render() {
+        // render app UI elements
+        return (
+          <div>
+          <h2>List of Quotes</h2>
+          <ItemList items={this.state.items} handleClick={this.selectItem}/>
+          <hr />
+          </div>
+        );
+      }
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+</script>
+</body>
+</html>

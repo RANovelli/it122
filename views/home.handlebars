@@ -1,0 +1,11 @@
+<h2>Home</h2>
+{{!-- <form method="POST" action="/detail">
+    <input type="text" name="name" placeholder="name" required maxlength="100">
+    <button>Search</button>
+</form> --}}
+<hr>
+<h3>Bands</h3>
+{{#each bands}}
+    <li><a href="/detail?id={{_id}}">{{_id}}</a></li>
+{{/each}}    
+
