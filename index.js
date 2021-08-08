@@ -60,13 +60,13 @@ app.get('/detail', (req, res) => {
     const itemId = req.query.id;
     return Band.findOne({ _id: itemId })
     .lean()
-    .then(jose => {
+    .then(band => {
         console.log(jose);
-        if(jose) {
-            res.render('details', {result: jose});
+        if(band) {
+            res.render('details', {result: band});
             //res.json(quote);
         }else{
-            res.status(404).json({message: "Not a valid Band id..."});
+            res.status(404).json({message: "Not a valid band id..."});
         }
     })
     .catch(err => {

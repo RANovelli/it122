@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo Page</title>
+    <link rel="stylesheet" href="./public/css/main.css">
+</head>
+
+<body>
+<h1>Fetching Demo</h1>
+
+<script>
+
+    fetch("http://localhost:3000/api/bands")
+        .then((response) => { return response.json();})
+        .then(results => console.log(results));
+
+    let band = {name:'black sabbath',sing:'ozzy',guitar:'tony',bass:'geezer',drums:'bill'}
+    fetch("http://localhost:3000/api/bands/add", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(band)
+    })
+        .then(res => res.json())
+        .then((json) => { console.log(json) });    
+    
+</script>
+
+
+<hr>
+<b>Copyright 2021</b>
+</body>
+</html>
