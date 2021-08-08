@@ -17,11 +17,13 @@ app.use('/api', cors()); // set Access-Control-Allow-Origin header for api route
 app.engine("handlebars", exphbs({defaultLayout: "main"}));
 app.set("view engine", "handlebars");
 
+
 // send static file as response
 app.get('/', (req,res) => {
     Band.find({}).lean()
         .then((bands) => {
-            res.render('home', { bands });
+            // res.render('home', { bands });
+            res.render('home_react', {bands: JSON.stringify(bands)});
         })
         .catch(err => next(err));
 });
@@ -45,12 +47,32 @@ app.get('/delete', (req,res) => {
     });
 });
 
-app.get('/detail', (req,res,next) => {
-    Band.findOne({ name:req.query.name }).lean()
-        .then((band) => {
-            res.render('details', {result: band} );
-        })
-        .catch(err => next(err));
+//  app.get('/detail', (req,res,next) => {
+//      Band.findOne({ name:req.query.name }).lean()
+//          .then((band) => {
+//              res.render('details', {result: band} );
+//          })
+//          .catch(err => next(err));
+//  });
+
+
+app.get('/detail', (req, res) => {
+    const itemId = req.query.id;
+    return Band.findOne({ _id: itemId })
+    .lean()
+    .then(band => {
+        console.log(jose);
+        if(band) {
+            res.render('details', {result: band});
+            //res.json(quote);
+        }else{
+            res.status(404).json({message: "Not a valid band id..."});
+        }
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({error: err});
+    });
 });
 
 // // handle POST

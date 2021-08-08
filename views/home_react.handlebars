@@ -1,0 +1,89 @@
+<div id="root"></div>
+<script type="text/babel">
+
+
+// funtional component that displays the list of band from mongo
+const ItemList = (props) => {
+       const bullets =  props.items.map((item)=> {
+         return <li onClick={props.handleClick} key={item._id}>{item.name}</li>
+       });
+       return <ul>{bullets}</ul>
+}
+
+// funtional component that display the band details when the user clicks on it
+const ItemDetail = (props) => {
+       return <div>
+               <h3>Band Members</h3>
+               <li>sing: {props.item.sing}</li>
+               <li>guitar1: {props.item.guitar1}</li>
+               <li>guitar2: {props.item.guitar2}</li>
+               <li>bass: {props.item.bass}</li>
+               <li>drums: {props.item.drums}</li>
+               </div>
+}
+
+
+
+class App extends React.Component{
+      constructor(props){
+          super(props);
+          // Set initial state using data from server application
+          this.state = {
+            items: {{{ bands }}},
+            currentItem: { } // current selected item
+          };
+
+          // bind application state to click handler
+          this.selectItem = this.selectItem.bind(this);
+      }
+      // some coments here
+      handleUpdate() {
+        fetch(`/api/quote/${this.state.currentItem._id}`, {
+          method: "POST",
+        	headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: this.state.currentItem.name,
+            sing: this.state.currentItem.sing,
+            guitar1: this.state.currentItem.guitar1,
+            guitar2: this.state.currentItem.guitar2,
+            bass: this.state.currentItem.bass,
+            drums: this.state.currentItem.drums,
+          })
+        })
+        .then((response) => {
+            return response.json();
+        })
+        .then((result) => {
+          console.log(JSON.stringify(result));
+          this.setState(result) 
+        })
+        .catch(err => console.log(err));
+      }
+
+      // handle list item clicked
+      selectItem(event) {
+        // event.target is the HTML item clicked
+        console.log(event.target.innerText);
+        const found = this.state.items.find((item)=> {
+          return item.name === event.target.innerText;
+        });
+        console.log(found);
+        this.setState({currentItem: found});
+      }
+
+      render() {
+        // render app UI elements
+        return (
+          <div>
+          <h2>Bands</h2>
+            <ItemList items={this.state.items} handleClick={this.selectItem}/>
+          <hr />
+          <ItemDetail item={this.state.currentItem} />
+          </div>
+        );
+      }
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+
+</script>
