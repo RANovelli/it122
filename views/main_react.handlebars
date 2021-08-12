@@ -1,0 +1,82 @@
+<div id="root"></div>
+    <script type="text/babel">
+
+        const items = {{{bands}}}
+
+        const Users = (props) => {
+          const listItems = props.items.map((item) => <li key={item.name} onClick={props.clickHandler}>
+            {item.name}
+            </li>);
+          return <ul>{listItems}</ul>
+        }
+        
+        {{!-- const divStyle = {
+        color: 'blue',
+        background: 'skyblue'
+        }; --}}
+
+        const Detail = (props) => {
+            return <div>
+                   <h3>Band Members</h3>
+                   <form>
+                   Name: <input type= "text" name="name" onChange={props.onChange} value={props.item.name || ""} /><br />
+                   Sing: <input type= "text" name="sing" onChange={props.onChange} value={props.item.sing || ""} /><br />
+                   Guitar 1: <input type= "text" name="guitar1" onChange={props.onChange} value={props.item.guitar1 || ""} /><br />
+                   Guitar 2: <input type= "text" name="guitar2" onChange={props.onChange} value={props.item.guitar2 || ""} /><br />
+                   Bass: <input type= "text" name="bass" onChange={props.onChange} value={props.item.bass || ""} /><br />
+                   Drums: <input type= "text" name="drums" onChange={props.onChange} value={props.item.drums || ""} />
+                   </form>
+                   <button onClick={props.onClear}>Clear</button> | <button onClick={props.onSave}>Save</button>
+                   </div>
+        }
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {current_item: {}};
+  }
+
+  showDetail = (e) => {
+            console.log(e.target.innerText);
+            const item = items.find((item) => item.name == e.target.innerText)
+            console.log(item)
+            this.setState({"current_item": item})
+  }
+
+  onChange = (e) => {
+    console.log(e.target)
+    const new_item = this.state.current_item;
+    new_item[e.target.name] = e.target.value;
+    console.log(new_item)
+    this.setState({"current_item": new_item})
+  }
+  
+  onClear = () => {
+    this.setState({"current_item": {}})
+  }
+  
+  onSave = () => {
+    let rnr = this.state.current_item;
+    fetch("/api/bands/add", {
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(rnr)
+})
+    .then(res => res.json())
+    .then((json) => { console.log(json); this.setState(rnr)});
+  }
+  
+  render() {
+    return ( 
+      <div> 
+        <h1>Rock &amp; Roll Bands</h1>
+        <Users items={items} clickHandler={this.showDetail} />
+        <hr/>
+        <Detail item={this.state.current_item} onSave={this.onSave} onChange={this.onChange} onClear={this.onClear}/>  
+      </div> );
+  }
+}
+
+ReactDOM.render(  <App />,  document.getElementById('root') );
+
+    </script>

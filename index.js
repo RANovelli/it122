@@ -23,7 +23,7 @@ app.get('/', (req,res) => {
     Band.find({}).lean()
         .then((bands) => {
             // res.render('home', { bands });
-            res.render('home_react', {bands: JSON.stringify(bands)});
+            res.render('main_react', {bands: JSON.stringify(bands)});
         })
         .catch(err => next(err));
 });
