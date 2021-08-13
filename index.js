@@ -104,7 +104,7 @@ app.post('/api/bands/add', (req,res,next) => {
         if (err) return next(err);
         console.log(result);
         // .catch(err => next(err));
-        res.json({"message": "band added"})    
+        res.json({"message": "band added to database"})    
     });
 });    
 

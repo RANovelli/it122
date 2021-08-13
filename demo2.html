@@ -12,24 +12,21 @@
   <body>
     <div id="root"></div>
     <script type="text/babel">
-    
-        const Greeting = (props) => {
-            console.log(props)
-            if (props.user) {
-                return <h1>Hello, {props.user}!</h1>;
-        }
-        return <h1>Hello, Stranger.</h1>;
-        }
 
-        const showDetail = (e) => {
-            console.log(e.target);
-            let name = e.target.innerText;
-            console.log(name);
+        const items = [
+          {"name": "Lemmy", "band": "Motorhead"},
+          {"name": "Pagey", "band": "Led Zeppelin"},
+          {"name": "Keef", "band": "Rolling Stones"},
+          {"name": "Iggy", "band": "The Stooges"}
+        ]
+
+        const Users = (props) => {
+          const listItems = props.items.map((item) => <li key={item.name} onClick={props.clickHandler}>
+            {item.name}
+            </li>);
+          return <ul>{listItems}</ul>
         }
-
-        const bands = ["rolling stones", "beatles", "the who", "the creation", "pretty things"];
-        const listBands = bands.map((band) =>  <li onClick={showDetail} key={band}>{band}</li>);
-
+        
         const divStyle = {
         color: 'blue',
         background: 'skyblue'
@@ -37,21 +34,63 @@
 
         const Detail = (props) => {
             return <div>
-                <hr/>
-                <h2>{props.band}</h2>
-                Some details about {props.band}.
-            </div>
+                   <h3>Musician</h3>
+                   <form>
+                   Name: <input type= "text" name="name" onChange={props.onChange} value={props.item.name || ""} /><br />
+                   Band: <input type= "text" name="band" onChange={props.onChange} value={props.item.band || ""} />
+                   </form>
+                   <button onClick={props.onClear}>Clear</button> | <button onClick={props.onSave}>Save</button>
+                   </div>
         }
 
-        const myApp = <div style={divStyle}>  
-        <Greeting user="Ryan" />
-        <ul>{listBands}</ul>
-        <Detail band="rolling stones" />
-        </div>
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {current_item: {}};
+  }
 
-      ReactDOM.render(myApp,  
-      document.getElementById('root')
-      );
+  showDetail = (e) => {
+            console.log(e.target.innerText);
+            const item = items.find((item) => item.name == e.target.innerText)
+            console.log(item)
+            this.setState({"current_item": item})
+  }
+
+  onChange = (e) => {
+    console.log(e.target)
+    const new_item = this.state.current_item;
+    new_item[e.target.name] = e.target.value;
+    console.log(new_item)
+    this.setState({"current_item": new_item})
+  }
+  
+  onClear = () => {
+    this.setState({"current_item": {}})
+  }
+  
+  onSave = () => {
+    let rnr = this.state.current_item;
+    fetch("/api/v1/add/", {
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(rnr)
+})
+    .then(res => res.json())
+    .then((json) => { console.log(json) });
+  }
+  
+  render() {
+    return ( 
+      <div style={divStyle}> 
+        <h1>Rock &amp; Rollers</h1>
+        <Users items={items} clickHandler={this.showDetail} />
+        <Detail item={this.state.current_item} onSave={this.onSave} onChange={this.onChange} onClear={this.onClear}/>
+        <hr/>  
+      </div> );
+  }
+}
+
+ReactDOM.render(  <App />,  document.getElementById('root') );
 
     </script>
     <!--
